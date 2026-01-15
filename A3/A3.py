@@ -26,7 +26,7 @@ def question_one():
 
     user_flag = input("\nEnter the flag: ").strip()
 
-    if user_flag == "FLAG{444.1}":
+    if user_flag == "FLAG{YOUFOUNDLSFLAG}":
         print("Correct flag!")
         return 10
     else:
