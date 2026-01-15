@@ -1,0 +1,58 @@
+import os
+
+SCORE_FILE = "scores.txt"
+
+def save_score(name, score):
+    with open(SCORE_FILE, "a") as f:
+        f.write(f"{name},{score}\n")
+
+def show_scores():
+    if not os.path.exists(SCORE_FILE):
+        print("\nNo scores yet.\n")
+        return
+
+    print("\n--- Scoreboard ---")
+    with open(SCORE_FILE, "r") as f:
+        for line in f:
+            name, score = line.strip().split(",")
+            print(f"{name}: {score}")
+    print("------------------\n")
+
+def linux_quiz():
+    score = 0
+
+    print("\nQuestion 1:")
+    print("Which command shows your current directory?")
+    answer = input("Your answer: ").strip()
+
+    if answer == "pwd":
+        print("Correct!")
+        score += 1
+    else:
+        print("Wrong. Correct answer is: pwd")
+
+    print("\nQuestion 2:")
+    print("Which command lists files in a directory?")
+    answer = input("Your answer: ").strip()
+
+    if answer == "ls":
+        print("Correct!")
+        score += 1
+    else:
+        print("Wrong. Correct answer is: ls")
+
+    return score
+
+def main():
+    print("=== Linux Command Challenge ===")
+    name = input("Enter your name: ").strip()
+
+    score = linux_quiz()
+
+    print(f"\n{name}, your final score is: {score}")
+    save_score(name, score)
+
+    show_scores()
+
+if __name__ == "__main__":
+    main()
