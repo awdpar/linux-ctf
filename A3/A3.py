@@ -18,10 +18,14 @@ def main():
         leaderboard[name] = score
         print(f"\n{name}'s total score: {score}")
 
+        player2 = input("\nIs there another player? (y/n): ").strip().lower()
+        if player2 != "y":
+            break
+
 
 #Question 1
 def question_one():
-    print("\n--- Question 2 ---")
+    print("\n--- Question 1 ---")
     print("Find the flag inside the file list system using the right command")
 
     user_flag = input("\nEnter the flag: ").strip()
@@ -35,12 +39,12 @@ def question_one():
     
 #Question 2
 def question_two():
-    print("\n--- Question 1 ---")
-    print("Find the flag inside the file named 'flag1.txt' using the right command")
+    print("\n--- Question 2 ---")
+    print("Find the flag inside the file named 'flag2.txt' using the right command")
 
     user_flag = input("\nEnter the flag: ").strip()
 
-    if user_flag == "FLAG{A3Q1ANSFOUND}":
+    if user_flag == "FLAG{A3Q2ANSFOUND}":
         print("Correct flag!")
         return 10
     else:
