@@ -1,6 +1,22 @@
+# CTF Python Game
+# Basic Linux Commands (pwd, ls, cat)
+
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import *
+import subprocess
+import platform
+import os
+
+
+linux_title = """
+██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗
+██║     ██║████╗  ██║██║   ██║╚██╗██╔╝
+██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝ 
+██║     ██║██║╚██╗██║██║   ██║ ██╔██╗ 
+███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗
+╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝
+"""
 
 # Game data
 leaderboard = {}
@@ -83,18 +99,31 @@ def show_leaderboard():
     messagebox.showinfo("Leaderboard", results)
     root.quit()
 
+def open_terminal():
+     system = platform.system()
+     #mac
+     if system == "Darwin":
+        subprocess.Popen(['open', '-a', 'Terminal', os.getcwd()])
+
+    #linux
+     elif system == "Linux":
+        try:
+            subprocess.Popen(['xterm', '-e', 'bash'])
+        except FileNotFoundError:
+            try:
+                subprocess.Popen(['gnome-terminal', '--', 'bash'])
+            except FileNotFoundError:
+                print("No suitable terminal found")
+     else:
+        print(f"Unsupported operating system: {system}")
+
 # GUI Setup
 root = tk.Tk()
-root.title("Linux CTF")
-root.geometry("400x300")
+root.title("Linux Basics CTF")
+root.geometry("400x450")
 
-tk.Label(root, text="Linux Basics CTF", font=("Arial", 20)).pack(pady=10)
-
-#image
-#image = PhotoImage(file="linux.png")
-#image_label = tk.Label(root, image=image)
-#image_label.pack()
-#image = resizeImage(image, 150, 150)
+ascii_label = tk.Label(root, text=linux_title, font=("Courier New", 12), fg="lime", justify="left")
+ascii_label.pack(pady=10)
 
 tk.Label(root, text="Student Name").pack()
 name_entry = tk.Entry(root)
@@ -111,5 +140,8 @@ flag_entry.pack()
 
 submit_btn = tk.Button(root, text="Submit Flag", command=submit_flag)
 submit_btn.pack(pady=10)
+
+terminal_button = tk.Button(root, text="Open Terminal", command=open_terminal)
+terminal_button.pack(pady=10)
 
 root.mainloop()
