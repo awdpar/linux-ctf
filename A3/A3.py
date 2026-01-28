@@ -1,5 +1,7 @@
 # CTF Python Game
 # Basic Linux Commands (pwd, ls, cat)
+#
+# Terminal Version
 
 import os
 
@@ -54,3 +56,4 @@ def question_two():
 
 if __name__ == "__main__":
     main()
+

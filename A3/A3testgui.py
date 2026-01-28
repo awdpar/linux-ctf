@@ -145,3 +145,6 @@ terminal_button = tk.Button(root, text="Open Terminal", command=open_terminal)
 terminal_button.pack(pady=10)
 
 root.mainloop()
+
+
+

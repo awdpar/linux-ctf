@@ -1,0 +1,5 @@
+- find file signature of jpeg
+https://ctf101.org/forensics/what-are-file-formats/
+
+
+- find metadata?
