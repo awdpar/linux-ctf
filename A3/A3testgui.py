@@ -1,5 +1,7 @@
 # CTF Python Game
 # Basic Linux Commands (pwd, ls, cat)
+#
+# (V1) Simple app using seperate window for actual PC terminal
 
 import tkinter as tk
 from tkinter import messagebox
