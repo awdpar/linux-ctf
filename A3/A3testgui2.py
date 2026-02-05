@@ -1,6 +1,7 @@
 # CTF Python Game
 # Basic Linux Commands (pwd, ls, cat)
-# Full screen application with built-in terminal emulator updated from previous version
+#
+# (V2) Full screen application with built-in terminal emulator updated from previous version
 #  that used computers terminal in a seperate window.
 
 import tkinter as tk
