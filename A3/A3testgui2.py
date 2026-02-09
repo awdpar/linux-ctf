@@ -26,6 +26,7 @@ current_score = 0
 current_player = ""
 question_number = 1
 current_dir = "/home/student"
+total_questions = 0
 
 # Correct Flags
 FLAGS = {
@@ -83,12 +84,15 @@ middle.grid(row=1, column=0, sticky="nsew", padx=20)
 # Two columns:
 # col 0 = player / buttons
 # col 1 = questions
-middle.grid_columnconfigure(0, weight=1)
+middle.grid_columnconfigure(0, weight=0, minsize=260)
 middle.grid_columnconfigure(1, weight=2)
 
 # Left panel
 left_panel = Frame(middle, bg="#111")
-left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+left_panel.grid(row=0, column=0, sticky="ns", padx=(0, 10))
+
+left_panel.grid_propagate(False)
+left_panel.config(width=260)
 
     # Left panel contents
 def styled_entry(parent):
@@ -98,6 +102,7 @@ def styled_entry(parent):
         fg="#00ff66",
         insertbackground="#00ff66",
         relief="flat",
+        width=38,
         font=("Courier New", 11)
     )
 
@@ -126,6 +131,17 @@ Label(
 name_entry = styled_entry(left_panel)
 name_entry.pack(fill="x", padx=10)
 
+Label(
+    left_panel,
+    text="Number of Questions",
+    bg="#111",
+    fg="#00ff66",
+    font=("Courier New", 11)
+).pack(pady=(10, 3))
+
+question_count_entry = styled_entry(left_panel)
+question_count_entry.pack(fill="x", padx=10)
+
 start_btn = styled_button(left_panel, "Start Game", lambda: start_game())
 start_btn.pack(pady=10, padx=10, fill="x")
 
@@ -141,6 +157,7 @@ flag_entry = styled_entry(left_panel)
 flag_entry.pack(fill="x", padx=10)
 
 submit_btn = styled_button(left_panel, "Submit Flag", lambda: submit_flag())
+submit_btn.config(state="disabled")
 submit_btn.pack(pady=10, padx=10, fill="x")
 
 # Right panel
@@ -155,7 +172,7 @@ question_label = Label(
     fg="#e6e6e6",
     justify="left",
     wraplength=400,
-    font=("Courier New", 14)
+    font=("Courier New", 15)
 )
 question_label.pack(padx=10, pady=10, anchor="nw")
 
@@ -269,19 +286,31 @@ status.grid(row=3, column=0, sticky="ew")
 
 # Game functions
 def start_game():
-    global current_player, current_score, question_number
+    global current_player, current_score, question_number, total_questions
 
     current_player = name_entry.get().strip()
     if not current_player:
         messagebox.showerror("Error", "Enter a student name")
+        return
+    try:
+        total_questions = int(question_count_entry.get().strip())
+        if total_questions < 1:
+            raise ValueError
+        if total_questions > 2:                                                             #UPDATE THIS FOR MORE QUESTIONS
+            messagebox.showerror("Error", f"Choose a number under 2")
+            return
+    except ValueError:
+        messagebox.showerror("Error", "Enter a valid number of questions")
         return
 
     current_score = 0
     question_number = 1
 
     name_entry.config(state="disabled")
+    question_count_entry.config(state="disabled")
 
     show_question()
+    submit_btn.config(state="normal")
     update_status()
 
 def show_question():
@@ -314,15 +343,17 @@ def submit_flag():
     question_number += 1
     update_status()
 
-    if question_number > 2:                                                                 #UPDATE THIS FOR MORE QUESTIONS
+    if question_number > total_questions:                                                   #UPDATE THIS FOR MORE QUESTIONS
         end_player()
     else:
         show_question()
 
 def update_status():
-    status.config(text=f"Score: {current_score} | Question {question_number}")
+    status.config(text=f"Score: {current_score} | Question {question_number}/{total_questions}")
 
 def end_player():
+    submit_btn.config(state="disabled")
+
     leaderboard[current_player] = current_score
 
     again_player = messagebox.askyesno(
@@ -336,6 +367,8 @@ def end_player():
         show_leaderboard()
 
 def reset_for_next_player():
+    submit_btn.config(state="disabled")
+
     global current_player, current_score, question_number
 
     current_player = ""
