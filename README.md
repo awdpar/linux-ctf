@@ -1,6 +1,6 @@
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](CurrentSS.png)
+[![Product Name Screen Shot][product-screenshot]](https://github.com/awdpar/linux-ctf/blob/main/currentSS.png?raw=true)
 
 Introduction CTF Python Game for new students
 Basic Linux Commands (pwd, ls, cat)
