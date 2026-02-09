@@ -1,7 +1,6 @@
 ## About The Project
 
-[![Linux GUI Game][product-screenshot]]
-[product-screenshot]: CurrentSS.png
+![Product Name Screen Shot][product-screenshot]
 
 Introduction CTF Python Game for new students
 Basic Linux Commands (pwd, ls, cat)
@@ -48,3 +47,6 @@ To start the application, run A3testgui.py file.
    ```sh
    python3 --version
    ```
+
+
+[product-screenshot]: CurrentSS.png
