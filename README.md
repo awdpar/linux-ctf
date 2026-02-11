@@ -1,6 +1,6 @@
 <br />
 <div align="center">
-    <img src="logo1.png" alt="Logo" width="80" height="80">
+    <img src="assets/logo1.png" alt="Logo" width="80" height="80">
 
 <h3 align="center">Linux Capture-The-Flag Game</h3>
 
@@ -57,4 +57,4 @@ To start the application, run A3testgui.py file.
    ```
 
 
-[product-screenshot]: currentSS.png
+[product-screenshot]: assets/currentSS.png
