@@ -1,11 +1,19 @@
-## About The Project
+<br />
+<div align="center">
+    <img src="logo1.png" alt="Logo" width="80" height="80">
+
+<h3 align="center">Linux Capture-The-Flag Game</h3>
+
+  <p align="center">
+    Introduction CTF Python Game for new students
+    Basic Linux Commands (pwd, ls, cat)
+    <br />
+  </p>
+</div>
+
+## GUI
 
 ![Product Name Screen Shot][product-screenshot]
-
-Introduction CTF Python Game for new students
-Basic Linux Commands (pwd, ls, cat)
-
-### Built With
 
 ### Built With
 
@@ -49,4 +57,4 @@ To start the application, run A3testgui.py file.
    ```
 
 
-[product-screenshot]: CurrentSS.png
+[product-screenshot]: currentSS.png
