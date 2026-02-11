@@ -172,7 +172,7 @@ question_label = Label(
     fg="#e6e6e6",
     justify="left",
     wraplength=400,
-    font=("Courier New", 15)
+    font=("Courier New", 14)
 )
 question_label.pack(padx=10, pady=10, anchor="nw")
 
