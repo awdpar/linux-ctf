@@ -28,7 +28,7 @@ To start the application, run A3testgui.py file.
 
 ### Prerequisites
 
-* python3
+* python3 *atleast 3.13.2*
   ```sh
   python3 --version
   ```
@@ -39,21 +39,13 @@ To start the application, run A3testgui.py file.
    ```sh
    git clone hhttps://github.com/awdpar/linux-ctf.git
    ```
-2. Check which version of python you have
+2. Navigate to folder
    ```sh
-   python3 --version
+   [~/linux-ctf/A3]
    ```
-3. Update your packages
+3. Run the game
    ```sh
-   sudo apt update
-   ```
-4. install python 3
-   ```sh
-   sudo apt install python3
-   ```
-5. verify you have latest python 3.14.3
-   ```sh
-   python3 --version
+   python3 A3testgui2.py
    ```
 
 
