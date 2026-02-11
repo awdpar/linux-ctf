@@ -38,8 +38,8 @@ FLAGS = {
 # Root window
 root = Tk()
 root.title("Linux Basics CTF")
-root.geometry("900x650")
-root.minsize(800, 550)
+root.geometry("800x700")
+root.minsize(700, 600)
 root.configure(bg="#0b0b0b")
 
 # *ROOT GRID CONFIG*
@@ -61,7 +61,7 @@ header.grid(row=0, column=0, pady=10)
 logo_shadow = Label(
     header, 
     text=linux_title,
-    font=("Courier New", 26),
+    font=("Courier New", 25),
     fg="#0a3", 
     bg="#0b0b0b"
 )
@@ -71,7 +71,7 @@ logo_shadow.place(x=3, y=3)
 logo = Label(
     header, 
     text=linux_title,
-    font=("Courier New", 26),
+    font=("Courier New", 25),
     fg="#00ff66", 
     bg="#0b0b0b"
 )
