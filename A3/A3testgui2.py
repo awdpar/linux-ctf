@@ -39,8 +39,8 @@ FLAGS = {
 # Root window
 root = Tk()
 root.title("Linux Basics CTF")
-root.geometry("800x700")
-root.minsize(700, 600)
+root.geometry("1000x800")
+root.minsize(900, 700)
 root.configure(bg="#0b0b0b")
 
 # *ROOT GRID CONFIG*
@@ -189,7 +189,7 @@ terminal = Text(
     bg="#000",
     fg="#00ff66",
     insertbackground="#00ff66",
-    font=("Courier New", 13),
+    font=("Courier New", 12),
     relief="flat"
 )
 terminal.grid(row=0, column=0, sticky="nsew")
