@@ -332,7 +332,7 @@ def show_question():
         )
     elif question_number == 3:
         question_label.config(
-            text="Question 2:\nDecode the flag in forensics.txt in base64"
+            text="Question 2:\n*Decode* the flag in forensics.txt in base64 using echo"
         )
     #elif question_number == 3:
     #    question_label.config(
