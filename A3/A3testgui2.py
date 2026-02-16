@@ -32,6 +32,7 @@ total_questions = 0
 FLAGS = {
     1: "FLAG{YOUFOUNDLSFLAG}",
     2: "FLAG{A3Q2ANSFOUND}",
+    3: "FLAG{suspicious_activity}"
     #3: "FLAG{EXAMPLEFLAG}"                                                                 #UPDATE THIS FOR MORE QUESTIONS
 }
 
@@ -171,7 +172,7 @@ question_label = Label(
     bg="#111",
     fg="#e6e6e6",
     justify="left",
-    wraplength=400,
+    wraplength=500,
     font=("Courier New", 14)
 )
 question_label.pack(padx=10, pady=10, anchor="nw")
@@ -188,7 +189,7 @@ terminal = Text(
     bg="#000",
     fg="#00ff66",
     insertbackground="#00ff66",
-    font=("Courier New", 11),
+    font=("Courier New", 13),
     relief="flat"
 )
 terminal.grid(row=0, column=0, sticky="nsew")
@@ -227,7 +228,7 @@ def process_command(cmd):
         if current_dir == "/home/student":
             terminal.insert("end", "A3  Documents  Downloads flag.txt FLAG{YOUFOUNDLSFLAG}\n")
         elif current_dir == "/home/student/A3":
-            terminal.insert("end", "Question2\n")
+            terminal.insert("end", "Question2 forensics.txt\n")
         elif current_dir == "/home/student/A3/Question2":
             terminal.insert("end", "flag1.txt\n")
         else:
@@ -257,8 +258,15 @@ def process_command(cmd):
     elif cmd.startswith("cat"):
         if current_dir == "/home/student/A3/Question2" and "flag1.txt" in cmd:
             terminal.insert("end", "FLAG{A3Q2ANSFOUND}\n")
+
+        elif current_dir == "/home/student/A3" and "forensics.txt" in cmd:
+            terminal.insert("end", "RkxBR3tzdXNwaWNpb3VzX2FjdGl2aXR5fQ==\n")
+
         else:
             terminal.insert("end", "cat: file not found\n")
+
+    elif cmd.startswith("echo RkxBR3tzdXNwaWNpb3VzX2FjdGl2aXR5fQ== | base64 -d"):
+        terminal.insert("end", "FLAG{suspicious_activity}\n")
 
     elif cmd == "pwd":
         terminal.insert("end", current_dir + "\n")
@@ -296,8 +304,8 @@ def start_game():
         total_questions = int(question_count_entry.get().strip())
         if total_questions < 1:
             raise ValueError
-        if total_questions > 2:                                                             #UPDATE THIS FOR MORE QUESTIONS
-            messagebox.showerror("Error", f"Choose a number under 2")
+        if total_questions > 3:                                                             #UPDATE THIS FOR MORE QUESTIONS
+            messagebox.showerror("Error", f"Choose a number under 3")
             return
     except ValueError:
         messagebox.showerror("Error", "Enter a valid number of questions")
@@ -322,6 +330,10 @@ def show_question():
         question_label.config(
             text="Question 2:\nFind the flag inside A3/Question2/flag1.txt using cat"
         )
+    elif question_number == 3:
+        question_label.config(
+            text="Question 2:\nDecode the flag in forensics.txt in base64"
+        )
     #elif question_number == 3:
     #    question_label.config(
     #        text="Question 3:Find the flag in your current directory"
@@ -343,7 +355,7 @@ def submit_flag():
     question_number += 1
     update_status()
 
-    if question_number > total_questions:                                                   #UPDATE THIS FOR MORE QUESTIONS
+    if question_number > total_questions:                                                   
         end_player()
     else:
         show_question()
