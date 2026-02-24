@@ -231,10 +231,18 @@ if pid == 0:
     os.dup2(slave_fd, 0)
     os.dup2(slave_fd, 1)
     os.dup2(slave_fd, 2)
-    os.execvp("bash", ["bash"])
+    os.execvp("bash", [
+        "bash",
+        "--noprofile",
+        "--norc",
+        "-i"
+    ])
 
 # Customize prompt
-os.write(master_fd, b'export PS1="student@linux-ctf:\\w$ "\n')
+os.write(master_fd, b'export TERM=dumb\n')
+os.write(master_fd, b'unset PROMPT_COMMAND\n')
+os.write(master_fd, b'PS1="student@linux-ctf:\\w$ "\n')
+os.write(master_fd, b'clear\n')
 
 # Read shell output in background thread
 def read_from_shell():
