@@ -207,7 +207,7 @@ CTF_DIR = os.path.abspath("ctf_env")
 if not os.path.exists(CTF_DIR):
     os.makedirs(CTF_DIR)
 
-# Create challenge files
+#challenge files
 with open(os.path.join(CTF_DIR, "flag.txt"), "w") as f:
     f.write("FLAG{YOUFOUNDLSFLAG}")
 
