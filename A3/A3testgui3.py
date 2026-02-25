@@ -232,9 +232,10 @@ if pid == 0:
     os.dup2(slave_fd, 1)
     os.dup2(slave_fd, 2)
 
-    os.environ["TERM"] = "xterm-256color"
+    os.environ["TERM"] = "xterm"
+    os.environ["PS1"] = "student@linux-ctf:\\w$ "
 
-    os.execvp("bash", ["bash", "--noprofile", "--norc"])
+    os.execvp("bash", ["bash", "--norc", "--noprofile"])
 
 # Customize prompt
 os.write(master_fd, b'PS1="student@linux-ctf:\\w$ "\n')
