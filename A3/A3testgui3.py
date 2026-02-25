@@ -232,7 +232,7 @@ if pid == 0:
     os.dup2(slave_fd, 1)
     os.dup2(slave_fd, 2)
 
-    os.environ["TERM"] = "xterm-256color"
+    os.environ["TERM"] = "dumb"
 
     os.execvp("bash", ["bash", "--noprofile", "--norc"])
 
@@ -241,7 +241,15 @@ os.write(master_fd, b'PS1="student@linux-ctf:\\w$ "\n')
 os.write(master_fd, b'clear\n')
 
 # Remove ANSI escape sequences (fixes Linux weird characters)
-ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
+ansi_escape = re.compile(
+    r'(\x1B[@-_][0-?]*[ -/]*[@-~])'  
+    r'|\x1B\][^\x07]*\x07'            
+    r'|\x1B\[[0-9;]*[a-zA-Z]'         
+    r'|\x07'                           
+    r'|\x0f'                           
+    r'|\x0e'                           
+    r'|\r'                             
+)
 
 def clean_ansi(text):
     return ansi_escape.sub('', text)
@@ -252,7 +260,6 @@ def read_from_shell():
         try:
             output = os.read(master_fd, 1024).decode(errors="ignore")
             output = clean_ansi(output)  
-            output = ''.join(ch for ch in output if ch.isprintable() or ch in "\n\r\t")
             terminal.insert("end", output)
             terminal.see("end")
         except OSError:
