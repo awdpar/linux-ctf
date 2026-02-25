@@ -252,6 +252,7 @@ def read_from_shell():
         try:
             output = os.read(master_fd, 1024).decode(errors="ignore")
             output = clean_ansi(output)  
+            output = ''.join(ch for ch in output if ch.isprintable() or ch in "\n\r\t")
             terminal.insert("end", output)
             terminal.see("end")
         except OSError:
