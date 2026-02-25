@@ -226,21 +226,19 @@ master_fd, slave_fd = pty.openpty()
 
 pid = os.fork()
 
+pid = os.fork()
+
 if pid == 0:
     os.setsid()
     os.dup2(slave_fd, 0)
     os.dup2(slave_fd, 1)
     os.dup2(slave_fd, 2)
-    os.execvp("bash", [
-        "bash",
-        "--noprofile",
-        "--norc",
-        "-i"
-    ])
+
+    os.environ["TERM"] = "xterm-256color"
+
+    os.execvp("bash", ["bash", "--noprofile", "--norc"])
 
 # Customize prompt
-os.write(master_fd, b'export TERM=dumb\n')
-os.write(master_fd, b'unset PROMPT_COMMAND\n')
 os.write(master_fd, b'PS1="student@linux-ctf:\\w$ "\n')
 os.write(master_fd, b'clear\n')
 
@@ -258,18 +256,19 @@ threading.Thread(target=read_from_shell, daemon=True).start()
 
 # Send user input to shell
 def handle_terminal_input(event):
-    # Get entire current line
     line = terminal.get("insert linestart", "insert")
 
-    # Split at last "$ "
     if "$ " in line:
-        command = line.split("$ ")[-1]
+        command = line.split("$ ")[-1].strip()
     else:
         command = line.strip()
 
-    # Send only the command + newline
-    os.write(master_fd, (command + "\n").encode())
+    if command == "clear":
+        terminal.delete("1.0", "end")
+        os.write(master_fd, b'\n')  #refresh prompt
+        return "break"
 
+    os.write(master_fd, (command + "\n").encode())
     return "break"
 
 
