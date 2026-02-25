@@ -209,15 +209,15 @@ if not os.path.exists(CTF_DIR):
 
 #challenge files
 with open(os.path.join(CTF_DIR, "flag.txt"), "w") as f:
-    f.write("FLAG{YOUFOUNDLSFLAG}")
+    f.write("FLAG{YOUFOUNDLSFLAG}\n")
 
 os.makedirs(os.path.join(CTF_DIR, "A3/Question2"), exist_ok=True)
 
 with open(os.path.join(CTF_DIR, "A3/Question2/flag1.txt"), "w") as f:
-    f.write("FLAG{A3Q2ANSFOUND}")
+    f.write("FLAG{A3Q2ANSFOUND}\n")
 
 with open(os.path.join(CTF_DIR, "A3/forensics.txt"), "w") as f:
-    f.write("RkxBR3tzdXNwaWNpb3VzX2FjdGl2aXR5fQ==")
+    f.write("RkxBR3tzdXNwaWNpb3VzX2FjdGl2aXR5fQ==\n")
 
 os.chdir(CTF_DIR)
 
@@ -237,6 +237,7 @@ if pid == 0:
     os.execvp("bash", ["bash", "--noprofile", "--norc"])
 
 # Customize prompt
+os.write(master_fd, b'stty -echo\n')
 os.write(master_fd, b'PS1="student@linux-ctf:\\w$ "\n')
 os.write(master_fd, b'clear\n')
 
@@ -260,6 +261,7 @@ def read_from_shell():
         try:
             output = os.read(master_fd, 1024).decode(errors="ignore")
             output = clean_ansi(output)  
+            output = output.replace('\r\n', '\n').replace('\r', '\n')
             terminal.insert("end", output)
             terminal.see("end")
         except OSError:
@@ -275,6 +277,8 @@ def handle_terminal_input(event):
         command = line.split("$ ")[-1].strip()
     else:
         command = line.strip()
+
+    terminal.insert("end", "\n")
 
     if command == "clear":
         terminal.delete("1.0", "end")
