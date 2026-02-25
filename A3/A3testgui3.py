@@ -12,7 +12,7 @@ import platform
 import os
 import pty
 import threading
-
+import re
 
 linux_title = """
 ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗
@@ -232,20 +232,26 @@ if pid == 0:
     os.dup2(slave_fd, 1)
     os.dup2(slave_fd, 2)
 
-    os.environ["TERM"] = "xterm"
-    os.environ["PS1"] = "student@linux-ctf:\\w$ "
+    os.environ["TERM"] = "xterm-256color"
 
-    os.execvp("bash", ["bash", "--norc", "--noprofile"])
+    os.execvp("bash", ["bash", "--noprofile", "--norc"])
 
 # Customize prompt
 os.write(master_fd, b'PS1="student@linux-ctf:\\w$ "\n')
 os.write(master_fd, b'clear\n')
 
+# Remove ANSI escape sequences (fixes Linux weird characters)
+ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
+
+def clean_ansi(text):
+    return ansi_escape.sub('', text)
+
 # Read shell output in background thread
 def read_from_shell():
     while True:
         try:
-            output = os.read(master_fd, 1024).decode()
+            output = os.read(master_fd, 1024).decode(errors="ignore")
+            output = clean_ansi(output)  
             terminal.insert("end", output)
             terminal.see("end")
         except OSError:
