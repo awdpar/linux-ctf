@@ -226,8 +226,6 @@ master_fd, slave_fd = pty.openpty()
 
 pid = os.fork()
 
-pid = os.fork()
-
 if pid == 0:
     os.setsid()
     os.dup2(slave_fd, 0)
