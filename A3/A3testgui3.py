@@ -208,8 +208,10 @@ if not os.path.exists(CTF_DIR):
     os.makedirs(CTF_DIR)
 
 #challenge files
+open(os.path.join(CTF_DIR, "FLAG{YOUFOUNDLSFLAG}"), "w").close()
+
 with open(os.path.join(CTF_DIR, "flag.txt"), "w") as f:
-    f.write("FLAG{YOUFOUNDLSFLAG}\n")
+    f.write("FLAG{YOUFOUNDCAT2FLAG}\n")
 
 os.makedirs(os.path.join(CTF_DIR, "A3/Question2"), exist_ok=True)
 
