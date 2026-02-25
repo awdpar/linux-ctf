@@ -269,6 +269,15 @@ def read_from_shell():
 
 threading.Thread(target=read_from_shell, daemon=True).start()
 
+def clear_startup_noise():
+    import time
+    time.sleep(0.8)
+    terminal.delete("1.0", "end")
+    time.sleep(0.3)
+    os.write(master_fd, b'\n')
+
+threading.Thread(target=clear_startup_noise, daemon=True).start()
+
 # Send user input to shell
 def handle_terminal_input(event):
     line = terminal.get("insert linestart", "insert")
