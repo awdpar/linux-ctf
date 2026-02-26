@@ -2,17 +2,16 @@
 # Basic Linux Commands (pwd, ls, cat)
 #
 # (V2) Full screen application with built-in terminal emulator updated from previous version
-#  that used computers terminal in a seperate window.
+#  that was a handmade terminal where commands were hard coded and wouldn't accept commands
+#  outside of the ones I coded. Imported PYT within v3 so it's a real sandbox terminal for students
 
-import tkinter as tk
 from tkinter import messagebox
 from tkinter import *
-import subprocess
-import platform
 import os
 import pty
 import threading
 import re
+import shutil
 
 linux_title = """
 ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗
@@ -28,14 +27,15 @@ leaderboard = {}
 current_score = 0
 current_player = ""
 question_number = 1
-current_dir = "/home/student"
 total_questions = 0
 
 # Correct Flags
 FLAGS = {
     1: "FLAG{YOUFOUNDLSFLAG}",
     2: "FLAG{A3Q2ANSFOUND}",
-    3: "FLAG{suspicious_activity}"
+    3: "FLAG{suspicious_activity}",
+    4: "FLAG{GREP123FOUND}",
+    5: None #set in submit_flag
     #3: "FLAG{EXAMPLEFLAG}"                                                                 #UPDATE THIS FOR MORE QUESTIONS
 }
 
@@ -197,29 +197,48 @@ terminal = Text(
 )
 terminal.grid(row=0, column=0, sticky="nsew")
 
-# ----------------------------
-# REAL TERMINAL USING PTY
-# ----------------------------
-
-# Create sandbox directory
+# PTY
+# create sandbox
 CTF_DIR = os.path.abspath("ctf_env")
 
-if not os.path.exists(CTF_DIR):
-    os.makedirs(CTF_DIR)
+if os.path.exists(CTF_DIR):
+    shutil.rmtree(CTF_DIR)
+os.makedirs(CTF_DIR)
 
-#challenge files
+# challenge files
+# Question 1
 open(os.path.join(CTF_DIR, "FLAG{YOUFOUNDLSFLAG}"), "w").close()
 
+# Blank
 with open(os.path.join(CTF_DIR, "flag.txt"), "w") as f:
     f.write("FLAG{YOUFOUNDCAT2FLAG}\n")
 
+# Question 2
 os.makedirs(os.path.join(CTF_DIR, "A3/Question2"), exist_ok=True)
-
 with open(os.path.join(CTF_DIR, "A3/Question2/flag1.txt"), "w") as f:
     f.write("FLAG{A3Q2ANSFOUND}\n")
 
+# Question 3
 with open(os.path.join(CTF_DIR, "A3/forensics.txt"), "w") as f:
     f.write("RkxBR3tzdXNwaWNpb3VzX2FjdGl2aXR5fQ==\n")
+
+# Question 4
+os.makedirs(os.path.join(CTF_DIR, "logs"), exist_ok=True)
+with open(os.path.join(CTF_DIR, "logs/system.log"), "w") as f:
+    f.write("INFO: system boot complete\n")
+    f.write("INFO: user login successful\n")
+    f.write("WARNING: disk usage at 80%\n")
+    f.write("INFO: network interface up\n")
+    f.write("FLAG{GREP123FOUND}\n")
+    f.write("ERROR: failed to mount /dev/sdb\n")
+    f.write("INFO: cron job started\n")
+    f.write("WARNING: high memory usage detected\n")
+
+# Question 5
+os.makedirs(os.path.join(CTF_DIR, "challenge"), exist_ok=True)
+with open(os.path.join(CTF_DIR, "challenge/README.txt"), "w") as f:
+    f.write("Create a directory with any name you choose using mkdir.\n")
+    f.write("Then submit that directory name as your flag.\n")
 
 os.chdir(CTF_DIR)
 
@@ -234,12 +253,12 @@ if pid == 0:
     os.dup2(slave_fd, 1)
     os.dup2(slave_fd, 2)
 
-    os.environ["TERM"] = "dumb"
+    os.environ["TERM"] = "xterm"
 
     os.execvp("bash", ["bash", "--noprofile", "--norc"])
 
 # Customize prompt
-os.write(master_fd, b'stty -echo\n')
+#os.write(master_fd, b'stty -echo\n')
 os.write(master_fd, b'PS1="student@linux-ctf:\\w$ "\n')
 os.write(master_fd, b'clear\n')
 
@@ -327,7 +346,7 @@ def start_game():
         total_questions = int(question_count_entry.get().strip())
         if total_questions < 1:
             raise ValueError
-        if total_questions > 3:                                                             #UPDATE THIS FOR MORE QUESTIONS
+        if total_questions > 5:                                                             #UPDATE THIS FOR MORE QUESTIONS
             messagebox.showerror("Error", f"Choose a number under 3")
             return
     except ValueError:
@@ -355,7 +374,15 @@ def show_question():
         )
     elif question_number == 3:
         question_label.config(
-            text="Question 2:\n*Decode* the flag in forensics.txt in base64 using echo"
+            text="Question 3:\n*Decode* the flag in forensics.txt in base64 using echo"
+        )
+    elif question_number == 4:
+        question_label.config(
+            text="Question 4:\nFind the flag hidden inside a log file among junk lines"
+        )
+    elif question_number == 5:
+        question_label.config(
+            text="Question 5:\nRead challenge/README.txt for your instructions."
         )
     #elif question_number == 3:
     #    question_label.config(
@@ -368,11 +395,25 @@ def submit_flag():
 
     user_flag = flag_entry.get().strip()
 
-    if user_flag == FLAGS.get(question_number):
+    if question_number == 5:
+        dir_path = os.path.join(CTF_DIR, "challenge", user_flag)
+        if os.path.isdir(dir_path):
+            current_score += 10
+            messagebox.showinfo("Correct", "Correct flag!")
+        else:
+            messagebox.showerror("Incorrect", "No directory with that name found. Use mkdir first!")
+    elif user_flag == FLAGS.get(question_number):
         current_score += 10
         messagebox.showinfo("Correct", "Correct flag!")
     else:
         messagebox.showerror("Incorrect", "Incorrect flag")
+
+    #before question 5
+    #if user_flag == FLAGS.get(question_number):
+    #    current_score += 10
+    #    messagebox.showinfo("Correct", "Correct flag!")
+    #else:
+    #    messagebox.showerror("Incorrect", "Incorrect flag")
 
     flag_entry.delete(0, END)
     question_number += 1
