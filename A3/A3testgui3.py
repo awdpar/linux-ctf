@@ -270,7 +270,9 @@ ansi_escape = re.compile(
     r'|\x07'                           
     r'|\x0f'                           
     r'|\x0e'                           
-    r'|\r'                             
+    r'|\r'
+    r'|\x7f'
+    r'|\x08'                             
 )
 
 def clean_ansi(text):
@@ -306,7 +308,7 @@ def handle_terminal_input(event):
 
 def handle_terminal_keypress(event):
     if event.keysym == "BackSpace":
-        os.write(master_fd, b'\x7f')
+        os.write(master_fd, b'\x08')
         return  # don't return "break" — let the widget delete the char visually too
     if event.keysym == "Tab":
         os.write(master_fd, b'\t')
