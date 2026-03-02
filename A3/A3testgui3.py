@@ -301,25 +301,22 @@ threading.Thread(target=clear_startup_noise, daemon=True).start()
 
 # Send user input to shell
 def handle_terminal_input(event):
-    line = terminal.get("insert linestart", "insert")
-
-    if "$ " in line:
-        command = line.split("$ ")[-1].strip()
-    else:
-        command = line.strip()
-
-    terminal.insert("end", "\n")
-
-    if command == "clear":
-        terminal.delete("1.0", "end")
-        os.write(master_fd, b'\n')  #refresh prompt
-        return "break"
-
-    os.write(master_fd, (command + "\n").encode())
+    os.write(master_fd, b'\n')
     return "break"
 
+def handle_terminal_keypress(event):
+    if event.keysym == "BackSpace":
+        os.write(master_fd, b'\x7f')
+        return  # don't return "break" — let the widget delete the char visually too
+    if event.keysym == "Tab":
+        os.write(master_fd, b'\t')
+        return "break"
+    if event.char and event.char.isprintable():
+        os.write(master_fd, event.char.encode())
+        return "break"
 
 terminal.bind("<Return>", handle_terminal_input)
+terminal.bind("<Key>", handle_terminal_keypress)
 
 
 # Status bottom left
