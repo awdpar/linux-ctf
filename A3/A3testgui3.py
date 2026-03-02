@@ -303,6 +303,18 @@ threading.Thread(target=clear_startup_noise, daemon=True).start()
 
 # Send user input to shell
 def handle_terminal_input(event):
+    line = terminal.get("insert linestart", "insert")
+    if "$ " in line:
+        command = line.split("$ ")[-1].strip()
+    else:
+        command = line.strip()
+    
+    if command == "clear":
+        os.write(master_fd, b'\n')
+        terminal.after(100, lambda: terminal.delete("1.0", "end"))
+        terminal.after(200, lambda: os.write(master_fd, b'\n'))
+        return "break"
+    
     os.write(master_fd, b'\n')
     return "break"
 
@@ -406,13 +418,6 @@ def submit_flag():
         messagebox.showinfo("Correct", "Correct flag!")
     else:
         messagebox.showerror("Incorrect", "Incorrect flag")
-
-    #before question 5
-    #if user_flag == FLAGS.get(question_number):
-    #    current_score += 10
-    #    messagebox.showinfo("Correct", "Correct flag!")
-    #else:
-    #    messagebox.showerror("Incorrect", "Incorrect flag")
 
     flag_entry.delete(0, END)
     question_number += 1
