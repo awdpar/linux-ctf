@@ -347,6 +347,9 @@ def handle_terminal_keypress(event):
     if event.keysym == "Tab":
         os.write(master_fd, b'\t')
         return "break"
+    if event.keysym == "c" and (event.state & 0x4):
+        os.write(master_fd, b'\x03')
+        return "break"
     if event.char and event.char.isprintable():
         os.write(master_fd, event.char.encode())
         return "break"
