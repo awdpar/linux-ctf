@@ -257,12 +257,12 @@ if pid == 0:
 
     os.execvp("bash", ["bash", "--noprofile", "--norc"])
 
-# Customize prompt
+# Terminal prompt
 #os.write(master_fd, b'stty -echo\n')
 os.write(master_fd, b'PS1="student@linux-ctf:\\w$ "\n')
 os.write(master_fd, b'clear\n')
 
-# Remove ANSI escape sequences (fixes Linux weird characters)
+# Remove ANSI characters
 ansi_escape = re.compile(
     r'(\x1B[@-_][0-?]*[ -/]*[@-~])'  
     r'|\x1B\][^\x07]*\x07'            
@@ -301,7 +301,7 @@ def clear_startup_noise():
 
 threading.Thread(target=clear_startup_noise, daemon=True).start()
 
-# Send user input to shell
+# Send User input to shell
 def handle_terminal_input(event):
     line = terminal.get("insert linestart", "insert")
     if "$ " in line:
@@ -321,7 +321,7 @@ def handle_terminal_input(event):
 def handle_terminal_keypress(event):
     if event.keysym == "BackSpace":
         os.write(master_fd, b'\x08')
-        return  # don't return "break" — let the widget delete the char visually too
+        return
     if event.keysym == "Tab":
         os.write(master_fd, b'\t')
         return "break"
@@ -395,10 +395,6 @@ def show_question():
         question_label.config(
             text="Question 5:\nRead challenge/README.txt for your instructions."
         )
-    #elif question_number == 3:
-    #    question_label.config(
-    #        text="Question 3:Find the flag in your current directory"
-    #    )
                                                                                             #UPDATE THIS FOR MORE QUESTIONS
 
 def submit_flag():
