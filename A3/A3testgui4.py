@@ -1,6 +1,6 @@
 # CTF Python Game
 # Basic Linux Commands (pwd, ls, cat, grep, mkdir)
-#
+# 
 # (V2) Full screen application with built-in terminal emulator updated from previous version
 #  that didn't have buttons to skip around the questions.
 
@@ -36,7 +36,9 @@ FLAGS = {
     2: "FLAG{A3Q2ANSFOUND}",
     3: "FLAG{suspicious_activity}",
     4: "FLAG{GREPFOUND}",
-    5: None  # in submit_flag                                                                                    #UPDATE THIS FOR MORE QUESTIONS
+    5: None,  # in submit_flag
+    6: "FLAG{CHMOD_UNLOCKED}",   
+                                                                                     #UPDATE THIS FOR MORE QUESTIONS
 }
 
 # Root window
@@ -214,7 +216,7 @@ next_btn.pack(side="left")
 
 # Terminal
 terminal_frame = Frame(root, bg="#000")
-terminal_frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=10)
+terminal_frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=(10,20))
 
 terminal_frame.grid_rowconfigure(0, weight=1)
 terminal_frame.grid_columnconfigure(0, weight=1)
@@ -267,6 +269,14 @@ with open(os.path.join(CTF_DIR, "challenge/README.txt"), "w") as f:
     f.write("Create a directory with any name you choose using mkdir.\n")
     f.write("Run: mkdir challenge/<yourname>\n")
     f.write("Then submit that directory name as your flag.\n")
+
+# Q6
+os.makedirs(os.path.join(CTF_DIR, "scripts"), exist_ok=True)
+script_path = os.path.join(CTF_DIR, "scripts/reveal.sh")
+with open(script_path, "w") as f:
+    f.write("#!/bin/bash\n")
+    f.write('echo "FLAG{CHMOD_UNLOCKED}"\n')
+os.chmod(script_path, 0o644)
 
 os.chdir(CTF_DIR)
 
@@ -357,18 +367,6 @@ def handle_terminal_keypress(event):
 terminal.bind("<Return>", handle_terminal_input)
 terminal.bind("<Key>", handle_terminal_keypress)
 
-# Status bar
-status = Label(
-    root,
-    text="Score: 0 | Question 1",
-    bg="#111",
-    fg="#00ff66",
-    anchor="w",
-    padx=10,
-    font=("Courier New", 10)
-)
-status.grid(row=3, column=0, sticky="ew")
-
 # Game functions
 def build_indicators():
     for widget in indicator_frame.winfo_children():
@@ -391,16 +389,16 @@ def update_indicators():
     for i, lbl in indicator_labels.items():
         if i in answered_questions:
             if i == question_number:
-                lbl.config(fg="#00ff66", bg="#003300")   # current + correct — green glow
+                lbl.config(fg="#00ff66", bg="#003300")   # current + correct = green glow
             else:
-                lbl.config(fg="#00ff66", bg="#111")      # correct — green
+                lbl.config(fg="#00ff66", bg="#111")      # correct = green
         elif i in wrong_questions:
             if i == question_number:
-                lbl.config(fg="#ff3333", bg="#330000")   # current + wrong — red glow
+                lbl.config(fg="#ff3333", bg="#330000")   # current + wrong = red glow
             else:
-                lbl.config(fg="#ff3333", bg="#111")      # wrong — red
+                lbl.config(fg="#ff3333", bg="#111")      # wrong = red
         elif i == question_number:
-            lbl.config(fg="#ffffff", bg="#333333")       # current unanswered — grey glow
+            lbl.config(fg="#ffffff", bg="#333333")       # current unanswered = grey glow
         else:
             lbl.config(fg="#444", bg="#111")             # unanswered
 
@@ -412,7 +410,6 @@ def navigate(direction):
         show_question()
         update_indicators()
         update_nav_buttons()
-        update_status()
 
         if question_number in answered_questions or question_number in wrong_questions:
             submit_btn.config(state="disabled")
@@ -434,7 +431,7 @@ def start_game():
         total_questions = int(question_count_entry.get().strip())
         if total_questions < 1:
             raise ValueError
-        if total_questions > 5:                                                                             #UPDATE THIS FOR MORE QUESTIONS
+        if total_questions > 6:                                                                             #UPDATE THIS FOR MORE QUESTIONS
             messagebox.showerror("Error", "Choose a number between 1 and 5")
             return
     except ValueError:
@@ -453,7 +450,6 @@ def start_game():
     show_question()
     submit_btn.config(state="normal")
     update_nav_buttons()
-    update_status()
 
 def show_question():
     questions = {
@@ -461,13 +457,15 @@ def show_question():
         2: "Question 2:\nFind the flag inside A3/Question2/flag1.txt using cat.",
         3: "Question 3:\nDecode the flag in A3/forensics.txt.\n\nHint: echo <contents> | base64 -d",
         4: "Question 4:\nA flag is hidden somewhere in logs/system.log.\n\nHint: Use grep to search for FLAG{ in the file.",
-        5: "Question 5:\nRead challenge/README.txt for your instructions."
+        5: "Question 5:\nRead challenge/README.txt for your instructions.",
+        6: "Question 7:\nThere is a script at scripts/reveal.sh that contains a flag but it won't run.\n\n"
+                "Give it execute permission first, then run it.\n\nHint: chmod +x scripts/reveal.sh\nThen: ./scripts/reveal.sh"
     }                                                                                                       #UPDATE THIS FOR MORE QUESTIONS
     text = questions.get(question_number, "")
     if question_number in answered_questions:
         text += "\n\n✓ Already answered"
     elif question_number in wrong_questions:
-        text += "\n\n✗ Incorrect — no more attempts"
+        text += "\n\n✗ Incorrect, no more attempts"
     question_label.config(text=text)
 
 def submit_flag():
@@ -503,14 +501,9 @@ def submit_flag():
 
     show_question()
     update_indicators()
-    update_status()
 
     if len(answered_questions) + len(wrong_questions) >= total_questions:
         end_player()
-
-def update_status():
-    resolved = len(answered_questions) + len(wrong_questions)
-    status.config(text=f"Score: {current_score} | Question {question_number}/{total_questions} | Answered: {resolved}/{total_questions}")
 
 def end_player():
     submit_btn.config(state="disabled")
@@ -552,8 +545,6 @@ def reset_for_next_player():
     for widget in indicator_frame.winfo_children():
         widget.destroy()
     indicator_labels.clear()
-
-    update_status()
 
     terminal.delete("1.0", "end")
     terminal.insert("end", "student@linux-ctf:~$ ")
