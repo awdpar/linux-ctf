@@ -353,10 +353,7 @@ def handle_terminal_input(event):
 def handle_terminal_keypress(event):
     if event.keysym == "BackSpace":
         os.write(master_fd, b'\x08')
-        return
-    if event.keysym == "Tab":
-        os.write(master_fd, b'\t')
-        return "break"
+        return 
     if event.keysym == "c" and (event.state & 0x4):
         os.write(master_fd, b'\x03')
         return "break"
