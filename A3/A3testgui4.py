@@ -38,7 +38,7 @@ FLAGS = {
     4: "FLAG{GREPFOUND}",
     5: None,  # in submit_flag
     6: "FLAG{CHMOD_UNLOCKED}",   
-                                                                                     #UPDATE THIS FOR MORE QUESTIONS
+                                                                                            #UPDATE THIS FOR MORE QUESTIONS
 }
 
 # Root window
@@ -249,7 +249,7 @@ with open(os.path.join(CTF_DIR, "A3/Question2/flag1.txt"), "w") as f:
 
 # Q3
 with open(os.path.join(CTF_DIR, "A3/forensics.txt"), "w") as f:
-    f.write("RkxBR3tzdXNwaWNpb3VzX2FjdGl2aXR5fQ==\n")
+    f.write("RkxBR3tzdXNwaWNpb3VzX2FjdGl2aXR5fQ==\n") 
 
 # Q4
 os.makedirs(os.path.join(CTF_DIR, "logs"), exist_ok=True)
@@ -391,16 +391,16 @@ def update_indicators():
             if i == question_number:
                 lbl.config(fg="#00ff66", bg="#003300")   # current + correct = green glow
             else:
-                lbl.config(fg="#00ff66", bg="#111")      # correct = green
+                lbl.config(fg="#00ff66", bg="#111")        # correct = green
         elif i in wrong_questions:
             if i == question_number:
                 lbl.config(fg="#ff3333", bg="#330000")   # current + wrong = red glow
             else:
-                lbl.config(fg="#ff3333", bg="#111")      # wrong = red
+                lbl.config(fg="#ff3333", bg="#111")        # wrong = red
         elif i == question_number:
             lbl.config(fg="#ffffff", bg="#333333")       # current unanswered = grey glow
         else:
-            lbl.config(fg="#444", bg="#111")             # unanswered
+            lbl.config(fg="#444", bg="#111")                 # unanswered
 
 def navigate(direction):
     global question_number
@@ -432,7 +432,7 @@ def start_game():
         if total_questions < 1:
             raise ValueError
         if total_questions > 6:                                                                             #UPDATE THIS FOR MORE QUESTIONS
-            messagebox.showerror("Error", "Choose a number between 1 and 5")
+            messagebox.showerror("Error", "Choose a number between 1 and 6")                                   # 
             return
     except ValueError:
         messagebox.showerror("Error", "Enter a valid number of questions")
@@ -458,7 +458,7 @@ def show_question():
         3: "Question 3:\nDecode the flag in A3/forensics.txt.\n\nHint: echo <contents> | base64 -d",
         4: "Question 4:\nA flag is hidden somewhere in logs/system.log.\n\nHint: Use grep to search for FLAG{ in the file.",
         5: "Question 5:\nRead challenge/README.txt for your instructions.",
-        6: "Question 7:\nThere is a script at scripts/reveal.sh that contains a flag but it won't run.\n\n"
+        6: "Question 6:\nThere is a script at scripts/reveal.sh that contains a flag but it won't run.\n\n"
                 "Give it execute permission first, then run it.\n\nHint: chmod +x scripts/reveal.sh\nThen: ./scripts/reveal.sh"
     }                                                                                                       #UPDATE THIS FOR MORE QUESTIONS
     text = questions.get(question_number, "")
