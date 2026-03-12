@@ -35,9 +35,10 @@ To start the application, run A3testgui.py file.
 
 ### Installation
 
+## If connected to internet
 1. Clone the repo
    ```sh
-   git clone hhttps://github.com/awdpar/linux-ctf.git
+   git clone https://github.com/awdpar/linux-ctf.git
    ```
 2. Navigate to folder
    ```sh
@@ -45,8 +46,31 @@ To start the application, run A3testgui.py file.
    ```
 3. Run the game
    ```sh
-   python3 A3testgui2.py
+   python3 A3testgui4.py
    ```
 
+## If no internet
+1. Download git repo zip to flash drive
+  ```sh
+   https://github.com/awdpar/linux-ctf.git
+   ```
+2. Locate folder on USB in linux and copy over linux-ctf-main into pc directory
+
+3. Right click on folder and click "open terminal here" & you should be in the ctf directory in terminal
+
+4. Run update 
+  ```sh
+   sudo apt update
+   ```
+
+5. Install Tkinter
+  ```sh
+   sudo apt install python3-tk
+   ```
+
+6. Run the game
+   ```sh
+   python3 A3testgui4.py
+   ```
 
 [product-screenshot]: assets/currentSS.png
