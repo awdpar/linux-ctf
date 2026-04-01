@@ -12,6 +12,9 @@ import pty
 import threading
 import re
 import json
+import fcntl
+import termios
+import struct
 from pathlib import Path
 
 linux_title = """
@@ -31,6 +34,8 @@ question_number = 1
 total_questions = 0
 answered_questions = set()
 wrong_questions = set()
+_ignore_output = False 
+_resize_after_id = None
 
 # QUESTIONS_JSON
 # Load questions
@@ -341,6 +346,29 @@ def handle_terminal_keypress(event):
 
 terminal.bind("<Return>", handle_terminal_input)
 terminal.bind("<Key>", handle_terminal_keypress)
+
+def resize_pty(event=None):
+    global _resize_after_id
+    if _resize_after_id:
+        root.after_cancel(_resize_after_id)
+    _resize_after_id = root.after(150, _do_resize)
+
+def _do_resize():
+    global _ignore_output
+    cols = 250 # terminal text wrap width
+    rows = terminal.winfo_height() // 20
+    if cols > 0 and rows > 0:
+        _ignore_output = True
+        size = struct.pack("HHHH", rows, cols, 0, 0)
+        fcntl.ioctl(master_fd, termios.TIOCSWINSZ, size)
+        root.after(300, _stop_ignore)
+
+def _stop_ignore():
+    global _ignore_output
+    _ignore_output = False
+
+terminal.bind("<Configure>", resize_pty)
+root.after(500, _do_resize)
 
 # Game functions
 def build_indicators():
