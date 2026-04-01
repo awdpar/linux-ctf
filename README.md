@@ -14,7 +14,6 @@
 ## GUI
 
 ![Product Name Screen Shot][product-screenshot]
-[product-screenshot]: assets/currentSS.png
 
 ### Built With
 
@@ -87,3 +86,5 @@ Then add a new file with the code for the question in
    ```sh
    A3 -> questions folder
    ```
+
+[product-screenshot]: assets/currentSS.png
