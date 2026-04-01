@@ -1,0 +1,47 @@
+{
+  "questions": [
+    {
+        "question": "Find the flag using the ls command.",
+        "flag": "YOUFOUNDLSFLAG",
+        "difficulty": 1,
+        "question_file": "YOUFOUNDLSFLAG",
+        "ctf_file_location": "YOUFOUNDLSFLAG"
+    },
+    {
+        "question": "Find the flag inside A3/Question2/flag1.txt using cat.",
+        "flag": "A3Q2ANSFOUND",
+        "difficulty": 1,
+        "question_file": "flag1.txt",
+        "ctf_file_location": "Question2/flag1.txt"
+    },
+    {
+        "question": "Decode the flag in A3/forensics.txt.\n\nHint: echo <contents> | base64 -d",
+        "flag": "suspicious_activity",
+        "difficulty": 1,
+        "question_file": "forensics.txt",
+        "ctf_file_location": "A3/forensics.txt"
+    },
+    {
+        "question": "A flag is hidden somewhere in logs/system.log.\n\nHint: Use grep to search for FLAG{ in the file.",
+        "flag": "GREPFOUND",
+        "difficulty": 1,
+        "question_file": "system.log",
+        "ctf_file_location": "logs/system.log"
+    },
+    {
+        "question": "Read challenge/README.txt for your instructions.",
+        "flag": null,
+        "difficulty": 1,
+        "question_file": "README.txt",
+        "ctf_file_location": "challenge/README.txt"
+    },
+    {
+        "question": "There is a script at scripts/reveal.sh that contains a flag but it won't run.\n\nGive it execute permission first, then run it.\n\nHint: chmod +x scripts/reveal.sh\nThen: ./scripts/reveal.sh",
+        "flag": "CHMOD_UNLOCKED",
+        "difficulty": 1,
+        "question_file": "reveal.sh",
+        "ctf_file_location": "scripts/reveal.sh",
+        "disable_exe": true
+    }
+  ]
+}

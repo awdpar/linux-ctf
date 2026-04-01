@@ -1,0 +1,8 @@
+INFO: system boot complete
+INFO: user login successful
+WARNING: disk usage at 80%
+INFO: network interface up
+FLAG{GREPFOUND}
+ERROR: failed to mount /dev/sdb
+INFO: cron job started
+WARNING: high memory usage detected
