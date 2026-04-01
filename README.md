@@ -35,7 +35,7 @@ To start the application, run A3testgui.py file.
 
 ### Installation
 
-## If connected to internet
+### If connected to internet
 1. Clone the repo
    ```sh
    git clone https://github.com/awdpar/linux-ctf.git
@@ -49,7 +49,7 @@ To start the application, run A3testgui.py file.
    python3 A3testgui4.py
    ```
 
-## If no internet
+### If no internet
 1. Download git repo zip to flash drive
   ```sh
    https://github.com/awdpar/linux-ctf.git
