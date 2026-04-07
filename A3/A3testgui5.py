@@ -16,6 +16,7 @@ import fcntl
 import termios
 import struct
 from pathlib import Path
+import random
 
 linux_title = """
 ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗
@@ -36,20 +37,14 @@ answered_questions = set()
 wrong_questions = set()
 _ignore_output = False 
 _resize_after_id = None
+current_difficulty = 1
+filtered_questions = []
+selected_questions = []
 
 # QUESTIONS_JSON
 # Load questions
 with open("questions.json", "rb") as f:
     questions_json = json.load(f)
-
-QUESTIONS = {
-    i: question['question']
-    for i, question in enumerate(questions_json["questions"], start=1)
-}
-FLAGS = {
-    i: question['flag']
-    for i, question in enumerate(questions_json["questions"], start=1)
-}
 
 # Root window
 root = Tk()
@@ -77,7 +72,7 @@ header.grid(row=0, column=0, pady=10)
 logo_shadow = Label(
     header,
     text=linux_title,
-    font=("Courier New", 25),
+    font=("Courier New", 23),
     fg="#0a3",
     bg="#0b0b0b"
 )
@@ -86,7 +81,7 @@ logo_shadow.place(x=3, y=3)
 logo = Label(
     header,
     text=linux_title,
-    font=("Courier New", 25),
+    font=("Courier New", 23),
     fg="#00ff66",
     bg="#0b0b0b"
 )
@@ -152,6 +147,17 @@ Label(
 
 question_count_entry = styled_entry(left_panel)
 question_count_entry.pack(fill="x", padx=10)
+
+Label(
+    left_panel,
+    text="Difficulty (1-3)",
+    bg="#111",
+    fg="#00ff66",
+    font=("Courier New", 11)
+).pack(pady=(10, 3))
+
+difficulty_entry = styled_entry(left_panel)
+difficulty_entry.pack(fill="x", padx=10)
 
 start_btn = styled_button(left_panel, "Start Game", lambda: start_game())
 start_btn.pack(pady=10, padx=10, fill="x")
@@ -302,6 +308,8 @@ def read_from_shell():
     while True:
         try:
             output = os.read(master_fd, 1024).decode(errors="ignore")
+            if _ignore_output:
+                continue
             output = clean_ansi(output)
             output = output.replace('\r\n', '\n').replace('\r', '\n')
             terminal.insert("end", output)
@@ -337,7 +345,7 @@ def handle_terminal_keypress(event):
     if event.keysym == "BackSpace":
         os.write(master_fd, b'\x08')
         return 
-    if event.keysym == "c" and (event.state & 0x4):
+    if event.keysym == "z" and (event.state & 0x4):
         os.write(master_fd, b'\x03')
         return "break"
     if event.char and event.char.isprintable():
@@ -423,23 +431,52 @@ def update_nav_buttons():
     prev_btn.config(state="normal" if question_number > 1 else "disabled")
     next_btn.config(state="normal" if question_number < total_questions else "disabled")
 
+def filter_questions_by_difficulty(difficulty):
+    global filtered_questions
+    filtered_questions = [
+        q for q in questions_json["questions"]
+        if q["difficulty"] == difficulty
+    ]
+
 def start_game():
-    global current_player, current_score, question_number, total_questions, answered_questions, wrong_questions
+    global current_player, current_score, question_number, total_questions, answered_questions, wrong_questions, current_difficulty, QUESTIONS, FLAGS, selected_questions
 
     current_player = name_entry.get().strip()
     if not current_player:
         messagebox.showerror("Error", "Enter a student name")
         return
+
+    try:
+        current_difficulty = int(difficulty_entry.get().strip())
+        if current_difficulty < 1 or current_difficulty > 3:
+            raise ValueError
+    except ValueError:
+        messagebox.showerror("Error", "Enter a difficulty between 1 and 3")
+        return
+
+    filter_questions_by_difficulty(current_difficulty)
+
     try:
         total_questions = int(question_count_entry.get().strip())
         if total_questions < 1:
             raise ValueError
-        if total_questions > len(questions_json["questions"]):
-            messagebox.showerror("Error", "Choose a number between 1 and 6")                                   # UPDATE THIS FOR MORE QUESTIONS
+        if total_questions > len(filtered_questions):
+            messagebox.showerror("Error", f"Only {len(filtered_questions)} questions available at difficulty {current_difficulty}")
             return
     except ValueError:
         messagebox.showerror("Error", "Enter a valid number of questions")
         return
+    
+    selected_questions = random.sample(filtered_questions, total_questions)
+
+    QUESTIONS = {
+        i: q['question']
+        for i, q in enumerate(selected_questions[:total_questions], start=1)
+    }
+    FLAGS = {
+        i: q['flag']
+        for i, q in enumerate(selected_questions[:total_questions], start=1)
+    }
 
     current_score = 0
     question_number = 1
@@ -448,6 +485,7 @@ def start_game():
 
     name_entry.config(state="disabled")
     question_count_entry.config(state="disabled")
+    difficulty_entry.config(state="disabled")
 
     build_indicators()
     show_question()
@@ -469,11 +507,13 @@ def submit_flag():
 
     if question_number in answered_questions or question_number in wrong_questions:
         return
-        
+
     user_flag = flag_entry.get().strip()
     correct = False
 
-    if question_number == 5:
+    current_q = selected_questions[question_number - 1]
+
+    if current_q.get("flag") is None:
         challenge_dir = os.path.join(CTF_DIR, "challenge")
         dir_path = os.path.join(challenge_dir, user_flag)
         if os.path.isdir(dir_path):
@@ -531,6 +571,8 @@ def reset_for_next_player():
     name_entry.delete(0, END)
     question_count_entry.config(state="normal")
     question_count_entry.delete(0, END)
+    difficulty_entry.config(state="normal")
+    difficulty_entry.delete(0, END) 
 
     flag_entry.delete(0, END)
     question_label.config(text="")
