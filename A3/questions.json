@@ -38,10 +38,17 @@
     {
         "question": "There is a script at scripts/reveal.sh that contains a flag but it won't run.\n\nGive it execute permission first, then run it.\n\nHint: chmod +x scripts/reveal.sh\nThen: ./scripts/reveal.sh",
         "flag": "FLAG{CHMOD_UNLOCKED}",
-        "difficulty": 1,
+        "difficulty": 2,
         "question_file": "reveal.sh",
         "ctf_file_location": "scripts/reveal.sh",
         "disable_exe": true
+    },
+    {
+        "question": "There is a file at A3/vault/locked.txt but it's not readable where it is.\n\nCopy it to your home directory and cat it to find the flag.\n\nHint: cp A3/vault/locked.txt ~/flag.txt",
+        "flag": "FLAG{CP_UNLOCKED}",
+        "difficulty": 1,
+        "question_file": "locked.txt",
+        "ctf_file_location": "vault/locked.txt"
     }
   ]
 }
