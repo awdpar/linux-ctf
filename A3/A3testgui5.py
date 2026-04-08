@@ -281,7 +281,9 @@ if pid == 0:
     os.dup2(slave_fd, 2)
 
     os.environ["TERM"] = "xterm"
-
+    os.environ["HOME"] = CTF_DIR
+    os.environ["PWD"] = CTF_DIR
+    os.chdir(CTF_DIR)
     os.execvp("bash", ["bash", "--noprofile", "--norc"])
 
 # Customize prompt
@@ -328,9 +330,28 @@ def clear_startup_noise():
 
 threading.Thread(target=clear_startup_noise, daemon=True).start()
 
+def is_escape_attempt(command):
+    parts = command.strip().split()
+    if not parts or parts[0] != "cd":
+        return False
+    if len(parts) == 1:
+        return False
+    target = parts[1]
+    try:
+        current = os.readlink(f"/proc/{pid}/cwd")
+    except Exception:
+        current = CTF_DIR
+    resolved = os.path.realpath(os.path.join(current, target))
+    ctf_real = os.path.realpath(CTF_DIR)
+    return not resolved.startswith(ctf_real)
+
 def handle_terminal_input(event):
     line = terminal.get("insert linestart", "insert")
     command = line.split("$ ")[-1].strip() if "$ " in line else line.strip()
+
+    if is_escape_attempt(command):
+        os.write(master_fd, b'\n')
+        return "break"
 
     if command == "clear":
         os.write(master_fd, b'\n')
