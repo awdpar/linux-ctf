@@ -1,8 +1,127 @@
 INFO: system boot complete
+INFO: loading kernel modules
+INFO: initializing network stack
+INFO: mounting filesystems
 INFO: user login successful
+INFO: session started for user student
+INFO: environment variables loaded
+INFO: PATH configured successfully
 WARNING: disk usage at 80%
-INFO: network interface up
-FLAG{GREPFOUND}
-ERROR: failed to mount /dev/sdb
-INFO: cron job started
+INFO: /var/log rotated successfully
+INFO: checking system integrity
+INFO: firewall rules applied
+INFO: network interface eth0 up
+INFO: network interface lo up
+INFO: DNS resolver configured
+INFO: NTP sync successful
+INFO: system clock updated
+WARNING: swap usage at 45%
+INFO: cron daemon started
+INFO: cron job scheduled: backup at 02:00
+INFO: cron job scheduled: cleanup at 04:00
+INFO: package manager cache updated
+INFO: 3 packages available for upgrade
+WARNING: package openssl is outdated
+INFO: ssh daemon started on port 22
+INFO: auth module loaded
+INFO: pam configuration applied
+INFO: audit logging enabled
+INFO: /tmp cleaned successfully
+INFO: temp directory initialized
 WARNING: high memory usage detected
+INFO: memory available: 1.2GB
+INFO: process monitor started
+INFO: watchdog daemon active
+ERROR: failed to mount /dev/sdb
+INFO: retrying mount for /dev/sdb
+ERROR: /dev/sdb mount retry failed
+WARNING: backup drive unavailable
+INFO: falling back to local storage
+INFO: local storage path set to /var/backup
+INFO: disk health check started
+INFO: /dev/sda health: OK
+INFO: /dev/sda1 usage: 62%
+INFO: /dev/sda2 usage: 14%
+WARNING: /dev/sda3 usage at 91%
+INFO: alert sent to sysadmin
+INFO: log rotation policy enforced
+INFO: archiving logs older than 30 days
+INFO: archived 14 log files
+INFO: compressing archived logs
+INFO: compression complete: saved 240MB
+INFO: uploading logs to remote server
+ERROR: remote log server unreachable
+WARNING: logs stored locally as fallback
+INFO: user student executed: ls
+INFO: user student executed: pwd
+INFO: user student executed: cd /home
+INFO: user student executed: cat readme.txt
+INFO: user student executed: ls -la
+INFO: user student executed: cd /var
+INFO: user student executed: ls /var/log
+INFO: user student executed: cd /tmp
+INFO: service httpd status: inactive
+INFO: service sshd status: active
+INFO: service cron status: active
+INFO: service ufw status: active
+INFO: service rsyslog status: active
+INFO: uptime: 4 hours 22 minutes
+INFO: load average: 0.14 0.09 0.07
+INFO: logged in users: 1
+INFO: active processes: 142
+INFO: zombie processes: 0
+INFO: kernel version: 5.15.0-91-generic
+INFO: hostname: linux-ctf
+INFO: timezone: UTC
+INFO: locale: en_US.UTF-8
+WARNING: certificate expires in 14 days
+INFO: renewal check scheduled
+INFO: ssl cert subject: CN=linux-ctf
+INFO: ssl cert issuer: self-signed
+WARNING: self-signed certificate in use
+INFO: recommend replacing with CA-signed cert
+INFO: user student executed: grep
+INFO: user student executed: cat /etc/hostname
+FLAG{GREPFOUND}
+INFO: user student executed: whoami
+INFO: user student executed: echo hello
+INFO: user student executed: ls -lh
+INFO: user student executed: pwd
+INFO: scheduled task: disk_report started
+INFO: disk report generated at /var/log/disk.log
+INFO: scheduled task: disk_report complete
+INFO: scheduled task: net_check started
+INFO: ping 8.8.8.8: success
+INFO: ping 1.1.1.1: success
+INFO: scheduled task: net_check complete
+INFO: system snapshot saved
+INFO: snapshot location: /var/snapshots/snap_001
+INFO: snapshot size: 1.1GB
+WARNING: snapshot storage at 70%
+INFO: old snapshots pruned
+INFO: 2 snapshots deleted
+INFO: available snapshot slots: 5
+INFO: backup verification started
+INFO: backup checksum: OK
+INFO: backup timestamp: valid
+INFO: backup verification complete
+ERROR: remote sync failed: connection timeout
+WARNING: retrying remote sync in 60 seconds
+ERROR: remote sync failed: connection timeout
+WARNING: remote sync aborted after 2 attempts
+INFO: incident logged: remote_sync_failure
+INFO: alert dispatched to monitoring system
+INFO: monitoring system acknowledged
+INFO: system health: degraded
+INFO: reason: remote storage unreachable
+INFO: local operations: normal
+INFO: no critical process failures detected
+INFO: session active for user student
+INFO: idle timeout: 30 minutes
+INFO: last activity: 2 minutes ago
+INFO: system shutdown not scheduled
+INFO: uptime target: 99.9%
+INFO: current uptime: 99.7%
+INFO: log file size: 4.2MB
+INFO: log file path: /var/log/system.log
+INFO: end of log segment
